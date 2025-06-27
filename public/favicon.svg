@@ -1,0 +1,20 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景圓形 -->
+  <circle cx="16" cy="16" r="15" fill="#059669"/>
+  
+  <!-- 山脈 -->
+  <path d="M4 20 L8 14 L12 17 L16 11 L20 15 L24 12 L28 17 L28 24 L4 24 Z" fill="#34D399"/>
+  
+  <!-- 軌跡路徑 -->
+  <path d="M6 21 Q10 17 14 19 Q18 16 22 18 Q26 15 28 17" 
+        fill="none" 
+        stroke="#FFFFFF" 
+        stroke-width="2" 
+        stroke-linecap="round"/>
+  
+  <!-- 起點 -->
+  <circle cx="6" cy="21" r="2" fill="#FFFFFF"/>
+  
+  <!-- 終點 -->
+  <rect x="26" y="15" width="4" height="4" fill="#FFFFFF" rx="1"/>
+</svg>

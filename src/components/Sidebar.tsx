@@ -46,7 +46,16 @@ const ActionButton = styled.button<{ $theme: Theme; $variant?: 'primary' | 'seco
   transition: all 0.2s;
   
   &:hover {
-    background-color: ${props => props.$variant === 'primary' ? '#2563EB' : props.$theme.colors.surface};
+    background-color: ${props => 
+      props.$variant === 'primary' 
+        ? props.$theme.colors.secondary 
+        : props.$theme.colors.surface
+    };
+    border-color: ${props => 
+      props.$variant === 'primary' 
+        ? props.$theme.colors.secondary 
+        : props.$theme.colors.border
+    };
     transform: translateY(-1px);
   }
 `;
@@ -380,7 +389,21 @@ export function Sidebar({
   return (
     <SidebarContainer $theme={theme}>
       <Header $theme={theme}>
-        <h1>GPX Map Viewer</h1>
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '12px', 
+          marginBottom: '8px' 
+        }}>
+          <img 
+            src="/logo.svg" 
+            alt="軌跡存摺" 
+            width="32" 
+            height="32" 
+            style={{ flexShrink: 0 }}
+          />
+          <h1 style={{ margin: 0, lineHeight: '32px' }}>軌跡存摺</h1>
+        </div>
         <p>選擇資料夾來載入GPX軌跡檔案</p>
       </Header>
 

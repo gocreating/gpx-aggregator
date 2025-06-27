@@ -12,26 +12,44 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 });
 
-// 自定義起點和終點圖標
-const startIcon = new L.Icon({
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-  className: 'start-marker'
-});
+// 創建動態的起點和終點圖標
+function createStartIcon(theme: Theme): L.DivIcon {
+  // 使用 tertiary 顏色創建 SVG 圓形標記
+  const color = theme.colors.tertiary;
+  const svgIcon = `
+    <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="10" cy="10" r="8" fill="${color}" stroke="white" stroke-width="2"/>
+      <circle cx="10" cy="10" r="4" fill="white"/>
+    </svg>
+  `;
+  
+  return new L.DivIcon({
+    html: svgIcon,
+    className: 'start-marker',
+    iconSize: [20, 20],
+    iconAnchor: [10, 10],
+    popupAnchor: [0, -10]
+  });
+}
 
-const endIcon = new L.Icon({
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-  className: 'end-marker'
-});
+function createEndIcon(theme: Theme): L.DivIcon {
+  // 使用 primary 顏色創建 SVG 方形標記
+  const color = theme.colors.primary;
+  const svgIcon = `
+    <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+      <rect x="2" y="2" width="16" height="16" fill="${color}" stroke="white" stroke-width="2" rx="2"/>
+      <rect x="6" y="6" width="8" height="8" fill="white" rx="1"/>
+    </svg>
+  `;
+  
+  return new L.DivIcon({
+    html: svgIcon,
+    className: 'end-marker',
+    iconSize: [20, 20],
+    iconAnchor: [10, 10],
+    popupAnchor: [0, -10]
+  });
+}
 
 const MapWrapper = styled.div<{ $theme: Theme }>`
   flex: 1;
@@ -59,12 +77,10 @@ const MapWrapper = styled.div<{ $theme: Theme }>`
   }
   
   /* 起點和終點標記樣式 */
-  .start-marker {
-    filter: hue-rotate(120deg); /* 綠色起點 */
-  }
-  
+  .start-marker,
   .end-marker {
-    filter: hue-rotate(0deg); /* 紅色終點 */
+    border: none !important;
+    background: transparent !important;
   }
   
   /* 軌跡tooltip樣式 */
@@ -158,12 +174,13 @@ function TrackPolyline({
 
   return (
     <>
-      {/* 軌跡線 */}
+      {/* 隱形的寬軌跡線用於增加hover偵測範圍 */}
       <Polyline
+        key={`${track.id}-hover-area`}
         positions={track.coordinates}
-        color={getTrackColor()}
-        weight={getTrackWeight()}
-        opacity={getTrackOpacity()}
+        color="transparent"
+        weight={15}
+        opacity={0}
         eventHandlers={{
           mouseover: (e) => {
             onTrackHover(track.id);
@@ -179,9 +196,26 @@ function TrackPolyline({
                 <div style="font-family: sans-serif; min-width: 150px; pointer-events: none;">
                   <strong style="color: ${theme.name === 'dark' ? '#F9FAFB' : '#1F2937'}; font-size: 14px;">${track.name}</strong><br/>
                   <div style="margin-top: 6px; font-size: 12px; color: ${theme.name === 'dark' ? '#9CA3AF' : '#6B7280'};">
-                    <div>⏱️ 時間: ${formatTime(track.duration)}</div>
-                    <div>📈 爬升: ${formatElevation(track.elevationGain)}</div>
-                    <div>📍 距離: ${formatDistance(track.distance)}</div>
+                    <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12,6 12,12 16,14"/>
+                      </svg>
+                      時間: ${formatTime(track.duration)}
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+                      </svg>
+                      爬升: ${formatElevation(track.elevationGain)}
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 4px;">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                      </svg>
+                      距離: ${formatDistance(track.distance)}
+                    </div>
                   </div>
                 </div>
               `);
@@ -205,11 +239,20 @@ function TrackPolyline({
         }}
       />
       
+      {/* 可見的軌跡線 */}
+      <Polyline
+        key={`${track.id}-${isHovered}-${isFocused}`}
+        positions={track.coordinates}
+        color={getTrackColor()}
+        weight={getTrackWeight()}
+        opacity={getTrackOpacity()}
+      />
+      
       {/* 起點標記 - 只在hover或focus時顯示 */}
       {startPoint && (isHovered || isFocused) && (
         <Marker 
           position={startPoint} 
-          icon={startIcon}
+          icon={createStartIcon(theme)}
           eventHandlers={{
             click: (e) => {
               e.originalEvent?.stopPropagation();
@@ -233,7 +276,7 @@ function TrackPolyline({
       {endPoint && startPoint !== endPoint && (isHovered || isFocused) && (
         <Marker 
           position={endPoint} 
-          icon={endIcon}
+          icon={createEndIcon(theme)}
           eventHandlers={{
             click: (e) => {
               e.originalEvent?.stopPropagation();
