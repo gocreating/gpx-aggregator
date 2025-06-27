@@ -65,7 +65,7 @@ const ThemeSelector = styled.div<{ $theme: Theme }>`
   margin-bottom: 20px;
 `;
 
-const ThemeButton = styled.button<{ $theme: Theme }>`
+const ThemeButton = styled.button<{ $theme: Theme; $isOpen: boolean }>`
   width: 100%;
   padding: 12px 16px;
   background: ${props => props.$theme.colors.surface};
@@ -79,7 +79,7 @@ const ThemeButton = styled.button<{ $theme: Theme }>`
   transition: all 0.2s ease;
 
   &:hover {
-    background: ${props => props.$theme.colors.border};
+    background: ${props => props.$isOpen ? props.$theme.colors.surface : props.$theme.colors.border};
   }
 `;
 
@@ -287,6 +287,7 @@ function ThemeSwitcher({ currentTheme, onThemeChange }: { currentTheme: Theme; o
     <ThemeSelector $theme={currentTheme} ref={dropdownRef}>
       <ThemeButton
         $theme={currentTheme}
+        $isOpen={isOpen}
         onClick={() => setIsOpen(!isOpen)}
       >
         <ThemeInfo $theme={currentTheme}>

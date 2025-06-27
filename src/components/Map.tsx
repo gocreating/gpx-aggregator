@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, Polyline, Marker, Popup, useMap } from 'react-leaflet';
 import styled from 'styled-components';
 import L from 'leaflet';
@@ -134,6 +134,47 @@ function TrackPolyline({
   onTrackHover, 
   onTrackFocus 
 }: TrackPolylineProps) {
+  const map = useMap();
+  const [hoverWeight, setHoverWeight] = useState(15);
+  const [showMarkers, setShowMarkers] = useState(false);
+
+  useEffect(() => {
+    const updateSettings = () => {
+      const zoom = map.getZoom();
+      
+      // 根據縮放等級動態調整 hover 偵測範圍
+      // 縮放等級越低（地圖越小），hover 範圍越大
+      // 縮放等級越高（地圖越大），hover 範圍相對較小但仍然友好
+      let weight;
+      if (zoom <= 8) {
+        weight = 25; // 很寬的偵測範圍，適合查看整個台灣
+      } else if (zoom <= 10) {
+        weight = 20; // 寬偵測範圍，適合查看地區
+      } else if (zoom <= 12) {
+        weight = 15; // 中等偵測範圍，適合查看城市
+      } else if (zoom <= 14) {
+        weight = 12; // 較窄偵測範圍，適合查看街道
+      } else {
+        weight = 10; // 最窄偵測範圍，適合詳細查看
+      }
+      setHoverWeight(weight);
+      
+      // 只有在縮放等級足夠大時才顯示起點終點標記
+      // 避免在小縮放等級時造成 hover 抖動問題
+      setShowMarkers(zoom >= 11);
+    };
+
+    // 初始設定
+    updateSettings();
+
+    // 監聽縮放變化
+    map.on('zoomend', updateSettings);
+
+    // 清理事件監聽器
+    return () => {
+      map.off('zoomend', updateSettings);
+    };
+  }, [map]);
   const getTrackColor = () => {
     if (isFocused) return theme.colors.trackFocus;
     if (isHovered) return theme.colors.trackHover;
@@ -179,7 +220,7 @@ function TrackPolyline({
         key={`${track.id}-hover-area`}
         positions={track.coordinates}
         color="transparent"
-        weight={15}
+        weight={hoverWeight}
         opacity={0}
         eventHandlers={{
           mouseover: (e) => {
@@ -248,8 +289,8 @@ function TrackPolyline({
         opacity={getTrackOpacity()}
       />
       
-      {/* 起點標記 - 只在hover或focus時顯示 */}
-      {startPoint && (isHovered || isFocused) && (
+      {/* 起點標記 - 只在hover或focus且縮放足夠大時顯示 */}
+      {startPoint && (isHovered || isFocused) && showMarkers && (
         <Marker 
           position={startPoint} 
           icon={createStartIcon(theme)}
@@ -272,8 +313,8 @@ function TrackPolyline({
         </Marker>
       )}
       
-      {/* 終點標記 - 只在hover或focus時顯示 */}
-      {endPoint && startPoint !== endPoint && (isHovered || isFocused) && (
+      {/* 終點標記 - 只在hover或focus且縮放足夠大時顯示 */}
+      {endPoint && startPoint !== endPoint && (isHovered || isFocused) && showMarkers && (
         <Marker 
           position={endPoint} 
           icon={createEndIcon(theme)}
