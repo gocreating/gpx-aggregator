@@ -1,0 +1,34 @@
+export interface GpxTrack {
+  id: string;
+  name: string;
+  coordinates: [number, number][];
+  duration?: number; // in minutes
+  elevationGain?: number; // in meters
+  distance?: number; // in kilometers
+  color: string;
+  file: File;
+  visible: boolean; // 控制軌跡是否可見
+}
+
+export interface Theme {
+  name: string;
+  colors: {
+    primary: string;
+    secondary: string;
+    background: string;
+    surface: string;
+    text: string;
+    textSecondary: string;
+    border: string;
+    trackDefault: string;
+    trackHover: string;
+    trackFocus: string;
+  };
+}
+
+export interface AppState {
+  tracks: GpxTrack[];
+  hoveredTrack: string | null;
+  focusedTrack: string | null;
+  theme: Theme;
+}

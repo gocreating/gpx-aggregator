@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="GPX Map Viewer" 
+xmlns="http://www.topografix.com/GPX/1/1"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>陽明山步道</name>
+    <desc>陽明山國家公園主要步道路線</desc>
+  </metadata>
+  <trk>
+    <name>陽明山步道</name>
+    <trkseg>
+      <trkpt lat="25.1800" lon="121.5500">
+        <ele>300</ele>
+        <time>2024-01-01T08:00:00Z</time>
+      </trkpt>
+      <trkpt lat="25.1820" lon="121.5520">
+        <ele>320</ele>
+        <time>2024-01-01T08:10:00Z</time>
+      </trkpt>
+      <trkpt lat="25.1840" lon="121.5540">
+        <ele>350</ele>
+        <time>2024-01-01T08:20:00Z</time>
+      </trkpt>
+      <trkpt lat="25.1860" lon="121.5560">
+        <ele>380</ele>
+        <time>2024-01-01T08:30:00Z</time>
+      </trkpt>
+      <trkpt lat="25.1880" lon="121.5580">
+        <ele>420</ele>
+        <time>2024-01-01T08:40:00Z</time>
+      </trkpt>
+      <trkpt lat="25.1900" lon="121.5600">
+        <ele>450</ele>
+        <time>2024-01-01T08:50:00Z</time>
+      </trkpt>
+      <trkpt lat="25.1920" lon="121.5620">
+        <ele>480</ele>
+        <time>2024-01-01T09:00:00Z</time>
+      </trkpt>
+      <trkpt lat="25.1940" lon="121.5640">
+        <ele>520</ele>
+        <time>2024-01-01T09:10:00Z</time>
+      </trkpt>
+      <trkpt lat="25.1960" lon="121.5660">
+        <ele>550</ele>
+        <time>2024-01-01T09:20:00Z</time>
+      </trkpt>
+      <trkpt lat="25.1980" lon="121.5680">
+        <ele>580</ele>
+        <time>2024-01-01T09:30:00Z</time>
+      </trkpt>
+      <trkpt lat="25.2000" lon="121.5700">
+        <ele>600</ele>
+        <time>2024-01-01T09:40:00Z</time>
+      </trkpt>
+      <trkpt lat="25.2020" lon="121.5720">
+        <ele>620</ele>
+        <time>2024-01-01T09:50:00Z</time>
+      </trkpt>
+      <trkpt lat="25.2040" lon="121.5740">
+        <ele>650</ele>
+        <time>2024-01-01T10:00:00Z</time>
+      </trkpt>
+      <trkpt lat="25.2060" lon="121.5760">
+        <ele>680</ele>
+        <time>2024-01-01T10:10:00Z</time>
+      </trkpt>
+      <trkpt lat="25.2080" lon="121.5780">
+        <ele>700</ele>
+        <time>2024-01-01T10:20:00Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="GPX Map Viewer" 
+xmlns="http://www.topografix.com/GPX/1/1"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>台北101登山路線</name>
+    <desc>從象山登山步道到台北101的健行路線</desc>
+  </metadata>
+  <trk>
+    <name>台北101登山路線</name>
+    <trkseg>
+      <trkpt lat="25.0282" lon="121.5613">
+        <ele>50</ele>
+        <time>2024-01-01T09:00:00Z</time>
+      </trkpt>
+      <trkpt lat="25.0285" lon="121.5620">
+        <ele>55</ele>
+        <time>2024-01-01T09:05:00Z</time>
+      </trkpt>
+      <trkpt lat="25.0290" lon="121.5625">
+        <ele>65</ele>
+        <time>2024-01-01T09:10:00Z</time>
+      </trkpt>
+      <trkpt lat="25.0295" lon="121.5630">
+        <ele>75</ele>
+        <time>2024-01-01T09:15:00Z</time>
+      </trkpt>
+      <trkpt lat="25.0300" lon="121.5635">
+        <ele>90</ele>
+        <time>2024-01-01T09:20:00Z</time>
+      </trkpt>
+      <trkpt lat="25.0305" lon="121.5640">
+        <ele>105</ele>
+        <time>2024-01-01T09:25:00Z</time>
+      </trkpt>
+      <trkpt lat="25.0310" lon="121.5645">
+        <ele>120</ele>
+        <time>2024-01-01T09:30:00Z</time>
+      </trkpt>
+      <trkpt lat="25.0315" lon="121.5650">
+        <ele>140</ele>
+        <time>2024-01-01T09:35:00Z</time>
+      </trkpt>
+      <trkpt lat="25.0320" lon="121.5655">
+        <ele>160</ele>
+        <time>2024-01-01T09:40:00Z</time>
+      </trkpt>
+      <trkpt lat="25.0325" lon="121.5660">
+        <ele>180</ele>
+        <time>2024-01-01T09:45:00Z</time>
+      </trkpt>
+      <trkpt lat="25.0330" lon="121.5665">
+        <ele>200</ele>
+        <time>2024-01-01T09:50:00Z</time>
+      </trkpt>
+      <trkpt lat="25.0335" lon="121.5670">
+        <ele>210</ele>
+        <time>2024-01-01T09:55:00Z</time>
+      </trkpt>
+      <trkpt lat="25.0337" lon="121.5674">
+        <ele>220</ele>
+        <time>2024-01-01T10:00:00Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
