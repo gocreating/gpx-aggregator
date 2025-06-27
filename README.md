@@ -15,6 +15,10 @@
 
 這個應用程式應該要有佈景主題以控制基本的視覺設計，預設為深色主題。佈景主題可控制軌跡預設顏色、軌跡hover效果、軌跡focus效果。
 
+顏色應該分為 primary, secondary, tertiary。
+軌跡預設為 tertiary，hover 效果偏好使用 secondary，focus 效果偏好使用 primary。
+起點標記使用接近 tertiary 的顏色，終點標記使用接近 primary 的顏色。
+
 # 使用流程
 
 1. 地圖預設載入台灣座標

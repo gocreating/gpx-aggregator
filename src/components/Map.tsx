@@ -121,7 +121,7 @@ function TrackPolyline({
   const getTrackColor = () => {
     if (isFocused) return theme.colors.trackFocus;
     if (isHovered) return theme.colors.trackHover;
-    return track.color;
+    return theme.colors.trackDefault;
   };
 
   const getTrackWeight = () => {

@@ -87,8 +87,8 @@ function calculateDuration(points: Array<{ time?: string }>): number | undefined
 }
 
 function generateTrackColor(_index: number): string {
-  // 統一使用主題中的預設顏色
-  return '#60A5FA'; // 使用深色主題的trackDefault顏色
+  // 返回佔位符，實際顏色在 Map 組件中使用主題顏色
+  return 'theme-default';
 }
 
 export async function parseGpxFile(file: File, index: number): Promise<GpxTrack> {

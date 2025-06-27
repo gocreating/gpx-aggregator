@@ -15,6 +15,7 @@ export interface Theme {
   colors: {
     primary: string;
     secondary: string;
+    tertiary: string;
     background: string;
     surface: string;
     text: string;
