@@ -117,6 +117,30 @@ function calculateDuration(points: Array<{ time?: string }>): number | undefined
   return (end.getTime() - start.getTime()) / (1000 * 60); // minutes
 }
 
+function calculateElevationProfile(points: Array<{ lat: number; lon: number; ele?: number }>): { distance: number; elevation: number }[] {
+  let total = 0;
+  const profile: { distance: number; elevation: number }[] = [];
+  for (let i = 0; i < points.length; i++) {
+    if (i > 0) {
+      const prev = points[i - 1];
+      const curr = points[i];
+      // Haversine formula
+      const R = 6371;
+      const dLat = (curr.lat - prev.lat) * Math.PI / 180;
+      const dLon = (curr.lon - prev.lon) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(prev.lat * Math.PI / 180) * Math.cos(curr.lat * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      total += R * c;
+    }
+    if (typeof points[i].ele === 'number') {
+      profile.push({ distance: total, elevation: points[i].ele! });
+    }
+  }
+  return profile;
+}
+
 function generateTrackColor(_index: number): string {
   // 返回佔位符，實際顏色在 Map 組件中使用主題顏色
   return 'theme-default';
@@ -131,6 +155,8 @@ export async function parseGpxFile(file: File, index: number): Promise<GpxTrack>
   }
   
   const coordinates: [number, number][] = points.map(p => [p.lat, p.lon]);
+  const elevations: (number | undefined)[] = points.map(p => p.ele);
+  const elevationProfile = calculateElevationProfile(points);
   const distance = calculateDistance(points);
   const elevationGain = calculateElevationGain(points);
   const elevationLoss = calculateElevationLoss(points);
@@ -141,6 +167,8 @@ export async function parseGpxFile(file: File, index: number): Promise<GpxTrack>
     id: `${file.name}-${Date.now()}`,
     name: name || file.name.replace('.gpx', ''),
     coordinates,
+    elevations,
+    elevationProfile,
     duration,
     elevationGain,
     elevationLoss,

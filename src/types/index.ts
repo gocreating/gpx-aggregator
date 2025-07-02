@@ -2,6 +2,8 @@ export interface GpxTrack {
   id: string;
   name: string;
   coordinates: [number, number][];
+  elevations?: (number | undefined)[];
+  elevationProfile?: { distance: number; elevation: number }[];
   duration?: number; // in minutes
   elevationGain?: number; // in meters
   elevationLoss?: number; // in meters

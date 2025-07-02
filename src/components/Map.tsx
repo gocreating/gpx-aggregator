@@ -3,6 +3,8 @@ import { MapContainer, TileLayer, Polyline, Marker, Popup, useMap } from 'react-
 import styled from 'styled-components';
 import L from 'leaflet';
 import { GpxTrack, Theme } from '../types';
+import { TrackDetailPanel } from './TrackDetailPanel';
+import { ElevationChart } from './ElevationChart';
 
 // 修正Leaflet默認圖標問題
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -429,6 +431,8 @@ export function Map({
       : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
   };
 
+  const activeTrack = focusedTrack ? tracks.find(t => t.id === focusedTrack) : undefined;
+
   return (
     <MapWrapper $theme={theme}>
       <MapContainer
@@ -456,6 +460,10 @@ export function Map({
             onTrackFocus={onTrackFocus}
           />
         ))}
+        {/* 右上角詳細資訊面板 */}
+        {activeTrack && <TrackDetailPanel track={activeTrack} theme={theme} />}
+        {/* 底部高度變化圖 */}
+        {activeTrack && <ElevationChart track={activeTrack} theme={theme} />}
       </MapContainer>
     </MapWrapper>
   );
