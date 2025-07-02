@@ -419,6 +419,7 @@ export function Map({
   onTrackHover,
   onTrackFocus,
 }: MapProps) {
+  const [activeTrackElevationHoverIndex, setActiveTrackElevationHoverIndex] = useState<number | null>(null);
   const getTileLayerUrl = () => {
     return theme.name === 'dark'
       ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
@@ -460,10 +461,32 @@ export function Map({
             onTrackFocus={onTrackFocus}
           />
         ))}
-        {/* 右上角詳細資訊面板 */}
-        {activeTrack && <TrackDetailPanel track={activeTrack} theme={theme} />}
-        {/* 底部高度變化圖 */}
-        {activeTrack && <ElevationChart track={activeTrack} theme={theme} />}
+        {/* 底部高度變化圖，傳遞 hover index callback */}
+        {activeTrack && (
+          <ElevationChart
+            track={activeTrack}
+            theme={theme}
+            onHoverIndexChange={setActiveTrackElevationHoverIndex}
+          />
+        )}
+        {/* 地圖上標記 hover 對應點 */}
+        {activeTrack && activeTrackElevationHoverIndex !== null && activeTrack.elevationProfile && (
+          (() => {
+            const pt = activeTrack.elevationProfile[activeTrackElevationHoverIndex];
+            const coord = activeTrack.coordinates[activeTrackElevationHoverIndex];
+            if (!pt || !coord) return null;
+            return (
+              <Marker
+                position={coord}
+                icon={L.divIcon({
+                  className: 'elev-hover-marker',
+                  html: `<div style="width:16px;height:16px;border-radius:50%;background:${theme.colors.primary};box-shadow:0 0 8px ${theme.colors.primary};border:2px solid #fff;"></div>`
+                })}
+                interactive={false}
+              />
+            );
+          })()
+        )}
       </MapContainer>
     </MapWrapper>
   );
