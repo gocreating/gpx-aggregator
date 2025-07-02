@@ -1,6 +1,5 @@
-import React from 'react';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
-import { Sidebar } from './components/Sidebar';
+import { Toolbar } from './components/Toolbar';
 import { Map } from './components/Map';
 import { useAppState } from './hooks/useAppState';
 import { Theme } from './types';
@@ -50,7 +49,7 @@ function App() {
     <ThemeProvider theme={state.theme}>
       <GlobalStyle $theme={state.theme} />
       <AppContainer>
-        <Sidebar
+        <Toolbar
           tracks={state.tracks}
           hoveredTrack={state.hoveredTrack}
           focusedTrack={state.focusedTrack}

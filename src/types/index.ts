@@ -4,6 +4,8 @@ export interface GpxTrack {
   coordinates: [number, number][];
   duration?: number; // in minutes
   elevationGain?: number; // in meters
+  elevationLoss?: number; // in meters
+  elevationRange?: number; // in meters (max - min elevation)
   distance?: number; // in kilometers
   color: string;
   file: File;

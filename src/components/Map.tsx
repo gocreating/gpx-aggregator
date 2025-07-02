@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, Polyline, Marker, Popup, useMap } from 'react-leaflet';
 import styled from 'styled-components';
 import L from 'leaflet';
@@ -85,21 +85,26 @@ const MapWrapper = styled.div<{ $theme: Theme }>`
   
   /* 軌跡tooltip樣式 */
   .track-tooltip {
+    pointer-events: none !important;
+    
     .leaflet-popup-content-wrapper {
       background-color: ${props => props.$theme.colors.surface} !important;
       border: 1px solid ${props => props.$theme.colors.border} !important;
       border-radius: 8px !important;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+      pointer-events: none !important;
     }
     
     .leaflet-popup-tip {
       background-color: ${props => props.$theme.colors.surface} !important;
       border: 1px solid ${props => props.$theme.colors.border} !important;
+      pointer-events: none !important;
     }
     
     .leaflet-popup-content {
       margin: 12px !important;
       color: ${props => props.$theme.colors.text} !important;
+      pointer-events: none !important;
     }
   }
   
@@ -225,42 +230,66 @@ function TrackPolyline({
         eventHandlers={{
           mouseover: (e) => {
             onTrackHover(track.id);
-            // 顯示tooltip
-            const popup = L.popup({
-              closeButton: false,
-              autoClose: false,
-              closeOnEscapeKey: false,
-              className: 'track-tooltip'
-            })
-              .setLatLng(e.latlng)
-              .setContent(`
-                <div style="font-family: sans-serif; min-width: 150px; pointer-events: none;">
-                  <strong style="color: ${theme.name === 'dark' ? '#F9FAFB' : '#1F2937'}; font-size: 14px;">${track.name}</strong><br/>
-                  <div style="margin-top: 6px; font-size: 12px; color: ${theme.name === 'dark' ? '#9CA3AF' : '#6B7280'};">
-                    <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <polyline points="12,6 12,12 16,14"/>
-                      </svg>
-                      時間: ${formatTime(track.duration)}
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
-                      </svg>
-                      爬升: ${formatElevation(track.elevationGain)}
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 4px;">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                        <circle cx="12" cy="10" r="3"/>
-                      </svg>
-                      距離: ${formatDistance(track.distance)}
+            
+            // 只在軌跡是 normal 狀態時顯示 tooltip
+            // 如果軌跡已經是 active (focused) 狀態，只套用 active 效果，不顯示 tooltip
+            if (!isFocused) {
+              // 計算 tooltip 位置，避免覆蓋軌跡造成抖動
+              const map = e.target._map;
+              const containerPoint = map.latLngToContainerPoint(e.latlng);
+              const offsetPoint = L.point(containerPoint.x + 15, containerPoint.y - 10);
+              const offsetLatLng = map.containerPointToLatLng(offsetPoint);
+              
+              const popup = L.popup({
+                closeButton: false,
+                autoClose: false,
+                closeOnEscapeKey: false,
+                closeOnClick: false,
+                className: 'track-tooltip',
+                offset: [15, -10] // 偏移避免覆蓋軌跡
+              })
+                .setLatLng(offsetLatLng)
+                .setContent(`
+                  <div style="font-family: sans-serif; min-width: 150px; pointer-events: none; user-select: none;">
+                    <strong style="color: ${theme.name === 'dark' ? '#F9FAFB' : '#1F2937'}; font-size: 14px;">${track.name}</strong><br/>
+                    <div style="margin-top: 6px; font-size: 12px; color: ${theme.name === 'dark' ? '#9CA3AF' : '#6B7280'};">
+                      <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <circle cx="12" cy="12" r="10"/>
+                          <polyline points="12,6 12,12 16,14"/>
+                        </svg>
+                        時間: ${formatTime(track.duration)}
+                      </div>
+                      <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                          <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        距離: ${formatDistance(track.distance)}
+                      </div>
+                      <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+                        </svg>
+                        爬升: ${formatElevation(track.elevationGain)}
+                      </div>
+                      <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+                        </svg>
+                        下降: ${formatElevation(track.elevationLoss)}
+                      </div>
+                      <div style="display: flex; align-items: center; gap: 4px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="3,6 3,18 21,12"/>
+                        </svg>
+                        高度落差: ${formatElevation(track.elevationRange)}
+                      </div>
                     </div>
                   </div>
-                </div>
-              `);
-            e.target.bindPopup(popup).openPopup();
+                `);
+              e.target.bindPopup(popup).openPopup();
+            }
           },
           mouseout: (e) => {
             // 鼠標離開軌跡時立即關閉hover效果和tooltip

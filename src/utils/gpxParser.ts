@@ -72,6 +72,37 @@ function calculateElevationGain(points: Array<{ ele?: number }>): number {
   return gain;
 }
 
+function calculateElevationLoss(points: Array<{ ele?: number }>): number {
+  let loss = 0;
+  
+  for (let i = 1; i < points.length; i++) {
+    const prev = points[i - 1];
+    const curr = points[i];
+    
+    if (prev.ele !== undefined && curr.ele !== undefined) {
+      const diff = curr.ele - prev.ele;
+      if (diff < 0) {
+        loss += Math.abs(diff);
+      }
+    }
+  }
+  
+  return loss;
+}
+
+function calculateElevationRange(points: Array<{ ele?: number }>): number | undefined {
+  const elevations = points.map(p => p.ele).filter(ele => ele !== undefined) as number[];
+  
+  if (elevations.length === 0) {
+    return undefined;
+  }
+  
+  const minElevation = Math.min(...elevations);
+  const maxElevation = Math.max(...elevations);
+  
+  return maxElevation - minElevation;
+}
+
 function calculateDuration(points: Array<{ time?: string }>): number | undefined {
   const firstPoint = points.find(p => p.time);
   const lastPoint = points.slice().reverse().find(p => p.time);
@@ -102,6 +133,8 @@ export async function parseGpxFile(file: File, index: number): Promise<GpxTrack>
   const coordinates: [number, number][] = points.map(p => [p.lat, p.lon]);
   const distance = calculateDistance(points);
   const elevationGain = calculateElevationGain(points);
+  const elevationLoss = calculateElevationLoss(points);
+  const elevationRange = calculateElevationRange(points);
   const duration = calculateDuration(points);
   
   return {
@@ -110,6 +143,8 @@ export async function parseGpxFile(file: File, index: number): Promise<GpxTrack>
     coordinates,
     duration,
     elevationGain,
+    elevationLoss,
+    elevationRange,
     distance,
     color: generateTrackColor(index),
     file,
